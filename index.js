@@ -18,8 +18,12 @@ const url = `mongodb+srv://${process.env.DB_User}:${process.env.DB_Pass}@cluster
 const client = new MongoClient(url);
 const fun = async () => {
     await client.connect();
-    const products = client.db("e-paq").collection("products");
-    products.insertOne({ name: "Hanna" });
+    const productColection = client.db("e-paq").collection("products");
+    app.get("/products", async (req, res) => {
+        const curser = productColection.find({});
+        const products = await curser.toArray();
+        res.send(products);
+    });
 };
 
 fun().catch((error) => console.log(`${error.name.bgRed.bold} ${error.message.red}`));
